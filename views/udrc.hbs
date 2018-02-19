@@ -1,0 +1,340 @@
+<h1>{{title}}</h1>
+<h4>Raspberry Pi {{piModel.model}}, Memory {{piModel.memory}} {{piModel.notes}}<br/>
+{{#if hat.name}}
+{{hat.product}} by {{hat.vendor}}
+{{else}}
+Controller Not Detected
+{{/if}}
+</h4>
+<fieldset>
+<legend>Modem Level Settings</legend>
+<a id="bcr-levels" class="modem" href="/commands/setbcr">
+	<button>Set Bridgecom Modem</button>
+</a>
+<a id="yaesu-levels" class="modem" href="/commands/setdr1x">
+	<button>Set Yaesu Modem</button>
+</a>
+<div id="other-levels">
+Use alsamixer to set modem levels. Start by selecting  
+<a id="yaesu-levels" class="modem" href="/commands/setdr1x"><button>Modem Levels</button></a>, 
+then follow these <a href="https://nw-digital-radio.groups.io/g/udrc/wiki/UDRC%E2%84%A2-For-Simplex-Hotspots-and-Converted-Analog-Repeaters#Troubleshooting" target="directions">directions</a>.
+</div>
+</fieldset>
+
+<form method="post">
+   <fieldset>
+   <legend>Required settings, specific to your setup</legend>
+   <p>Set Repeater/Hotspot callsigns. Review the other values, it is recommended to start with the default values.</p>
+   <div class="servicecell-nb">
+   <table>
+      <tr>
+         <th>Radio Type</th>
+         <td class="udrcinput">
+	    <select id="radioType" name="radioType" onchange="updateoptions(this);levelButton()">
+            <option value="dr1x-uhf">Yaesu DR-1X UHF</option>
+            <option value="dr1x-vhf">Yaesu DR-1X VHF</option>
+            <option value="bcr220">Bridgecom BCR</option>
+            <option value="other">Other</option>
+	    </select>
+         </td>
+      <tr>
+         <th>Repeater Callsign (8 Chars)</th>
+         <td class="udrcinput"><input onkeyup="upcase(this)" maxlen=8 onchange="setgateway(this)" type="text" id="callsign" value="{{conf.callsign}}"
+            pattern="[A-Z0-9]{1}[A-Z0-9]{0,1}\d{1}[A-Z]{0,4}\s{1,4}[A-D]" name="callsign"
+            title="A repeater callsign is up to 6 characters, the field requires 8 characters, with the 8th character being a module ID [A-D]"
+            required
+            /></td>
+      </tr>
+      <tr>
+         <th>Gateway Callsign (8 Chars)</th>
+         <td class="udrcinput"><input onkeyup="upcase(this)" maxlen=8 type="text" id="gateway" value="{{conf.gateway}}"
+            pattern="[A-Z0-9]{1}[A-Z0-9]{0,1}\d{1}[A-Z]{0,4}\s{1,4}G" name="gateway"
+            title="A gateway callsign is up to 6 characters, the field requires 8 characters, with the 8th character being a module ID of 'G'"
+            /></td>
+      </tr>
+      <tr>
+         <th>Operating Mode</th>
+         <td class="udrcinput">
+            <select id="mode" name="mode" onchange="setSimplex()">
+               <option value="0">Duplex (repeater)</option>
+               <option value="1">Simplex (hotspot)</option>
+               <option value="2">Gateway (remote)</option>
+               <option value="3">TX Only (split repeater)</option>
+               <option value="4">RX Only (split repeater)</option>
+               <option value="5">TX and RX (split repeater)</option>
+            </select>
+         </td>
+      </tr>
+      <tr>
+         <th>Controller Type</th>
+         <td class="udrcinput"><input type="hidden" name="controllerType" id="controllerType" value="{{conf.controllerType}}" />UDRC</td>
+      </tr>
+      <tr>
+         <th>Controller mode when not using D-STAR</th>
+         <td class="udrcinput">
+            <select id="serialConfig" name="serialConfig">
+               <option value="1">Auto RX / FM TX (DR-1X)</option>
+               <option value="2">Auto RX / Auto TX (DR-1X)</option>
+               <option value="3">Digital RX / Digital TX (DR-1X)</option>
+               <option value="4">FM RX / FM TX</option>
+               <option value="5">Use Mini Din-6 for Hotspot</option>
+            </select>
+         </td>
+      </tr>
+      <tr>
+         <th>Modem Type</th>
+         <td class="udrcinput"><input contenteditable="false" type="hidden" name="modemType" id="modemType" value="{{conf.modemType}}" />Sound Card</td>
+      </tr>
+      <tr>
+         <th>UDRC Modem RX Device</th>
+         <td class="udrcinput"><input type="hidden" name="soundCardRXDevice" id="soundCardRXDevice" value="{{conf.soundCardRXDevice}}" />{{conf.soundCardRXDevice}}</td>
+      </tr>
+      <tr>
+         <th>UDRC Modem TX Device</th>
+         <td class="udrcinput"><input type="hidden" name="soundCardTXDevice" id="soundCardTXDevice" value="{{conf.soundCardTXDevice}}" />{{conf.soundCardTXDevice}}</td>
+      </tr>
+      </table>
+      </div>
+
+      <div class="servicecell-nb">
+      <table>
+      <tr>
+         <th>Repeater Response Message</th>
+         <td class="udrcinput">
+            <select id="ack" name="ack">
+               <option value="0">None</option>
+               <option value="1">Bit Error Rate (BER)</option>
+               <option value="2">Status Report</option>
+            </select>
+         </td>
+      </tr>
+      <tr title="Only allow stations with a callign that matches the 1st 7 characters of Repeater/Hotspot">
+         <th>Restrict Access</th>
+         <td class="udrcinput">
+            <input type="radio"  id="restriction" name="restriction" value="1">On &nbsp;
+            <input type="radio"  id="restriction" name="restriction" value="0">Off
+         </td>
+      </tr>
+      <tr>
+         <th>Require Valid Repeater Callsign</th>
+         <td class="udrcinput">
+            <input type="radio" name="rpt1Validation"  id="rpt1Validation" value="1">On &nbsp;
+            <input type="radio" name="rpt1Validation"  id="rpt1Validation" value="0">Off
+         </td>
+      </tr>
+      <tr>
+         <th>Blank DTMF</th>
+         <td class="udrcinput">
+            <input type="radio" name="dtmfBlanking"  id="dtmfBlanking" value="1">On &nbsp;
+            <input type="radio" name="dtmfBlanking"  id="dtmfBlanking" value="0">Off
+         </td>
+      </tr>
+      <tr>
+         <th>Send Error Reply</th>
+         <td class="udrcinput">
+            <input type="radio" name="errorReply"  id="errorReply" value="1">On &nbsp;
+            <input type="radio" name="errorReply"  id="errorReply" value="0">Off
+         </td>
+      </tr>
+      </table>
+      </div>
+
+      <div class="servicecell-nb">
+      <table>
+      <tr>
+         <th>Beacon Interval (seconds)</th>
+         <td class="udrcinput"><input type="number" name="beaconTime" id="beaconTime" value="{{conf.beaconTime}}" /></td>
+      </tr>
+      <tr>
+         <th>Beacon Text</th>
+         <td class="udrcinput"><input type="text" name="beaconText" id="beaconText" value="{{conf.beaconText}}" /></td>
+      </tr>
+      <tr>
+         <th>Beacon Voice</th>
+         <td class="udrcinput">
+            <input type="radio" name="beaconVoice"  id="beaconVoice" value="1">On &nbsp;
+            <input type="radio" name="beaconVoice"  id="beaconVoice" value="0">Off
+         </td>
+      </tr>
+      <tr>
+         <th>Beacon Language</th>
+         <td class="udrcinput">
+            <select name="language" id="language">
+               <option value="0">English (UK)</option>
+               <option value="1">Deutsche</option>
+               <option value="2">Dansk</option>
+               <option value="3">Français</option>
+               <option value="4">Italiano</option>
+               <option value="5">Polskie</option>
+               <option value="6">Español</option>
+               <option value="7">Svenska</option>
+               <option value="8">Nederlands</option>
+               <option value="9">English (US)</option>
+               <option value="10">Norsk</option>
+            </select>
+         </td>
+      </tr>
+      <!--
+      <tr>
+         <th>Announcement</th>
+         <td class="udrcinput">
+            <input type="radio" name="announcementEnabled" id="announcementEnabled" value="1">Enabled &nbsp;
+            <input type="radio" name="announcementEnabled" id="announcementEnabled" value="0">Disabled
+         </td>
+      </tr>
+      <tr>
+            <th>controlEnabled</th>
+            <td class="udrcinput"><input type="text" name="controlEnabled" id="controlEnabled" value="{{conf.controlEnabled}}" /></td>
+      </tr>
+         -->
+    </table>
+    </div>
+    </fieldset>
+   <fieldset>
+   <legend>Settings specific to your network</legend>
+   <p>Leave unchanged if the UDRC and Gateway are on the same Raspberry Pi</p>
+    <table>
+      <tr>
+         <th>Gateway IP Address</th>
+         <td class="udrcinput"><input type="text" name="gatewayAddress" id="gatewayAddress" value="{{conf.gatewayAddress}}" /></td>
+      </tr>
+      <tr>
+         <th>Gateway Listens on UDP Port Number</th>
+         <td class="udrcinput"><input type="text" name="gatewayPort" id="gatewayPort" value="{{conf.gatewayPort}}" /></td>
+      </tr>
+      <tr>
+         <th>Repeater IP Address</th>
+         <td class="udrcinput"><input type="text" name="localAddress" id="localAddress" value="{{conf.localAddress}}" /></td>
+      </tr>
+      <tr>
+         <th>Repeater Listens on UDP Port Number</th>
+         <td class="udrcinput"><input type="text" name="localPort" id="localPort" value="{{conf.localPort}}" /></td>
+      </tr>
+<!--
+      <tr>
+         <th>Name on Network Console</th>
+         <td class="udrcinput"><input type="text" name="networkName" id="networkName" value="{{conf.networkName}}" /></td>
+      </tr>
+-->
+    </table>
+    </fieldset>
+    <fieldset>
+    <legend>Miscellaneous</legend>
+    <p>These should generally be left at the default values</p> 
+    <table>
+      <tr>
+         <th>Transmit Timeout (seconds)</th>
+         <td class="udrcinput"><input type="text" name="timeout" id="timeout" value="{{conf.timeout}}" /></td>
+      </tr>
+      <tr>
+         <th>Acknowledgement Time (ms)</th>
+         <td class="udrcinput"><input type="text" name="ackTime" id="ackTime" value="{{conf.ackTime}}" /></td>
+      </tr>
+      <tr>
+         <th>Transmit Hang Time (seconds)</th>
+         <td class="udrcinput"><input type="text" name="activeHangTime" id="activeHangTime" value="{{conf.activeHangTime}}" /></td>
+      </tr>
+      <!--
+         <tr>            <th>Extra Logging</th>
+                         <td class="udrcinput"><input type="text" name="logging" id="logging" value="{{conf.logging}}" /></td>
+         </tr>
+      <tr>
+         <th>PTT</th>
+         <td class="udrcinput">
+            <input type="radio" name="pttInvert" id="pttInvert" value="1">Inverted &nbsp;
+            <input type="radio" name="pttInvert" id="pttInvert" value="0">Not Inverted
+         </td>
+      </tr>
+         -->
+      <tr>
+         <th>RX Invert</th>
+         <td class="udrcinput">
+            <input type="radio" name="soundCardRXInvert" id="soundCardRXInvert" value="1">Yes &nbsp;
+            <input type="radio" name="soundCardRXInvert" id="soundCardRXInvert" value="0">No
+         </td>
+      </tr>
+      <tr>
+         <th>TX Invert</th>
+         <td class="udrcinput">
+            <input type="radio" name="soundCardTXInvert" id="soundCardTXInvert" value="1">Yes &nbsp;
+            <input type="radio" name="soundCardTXInvert" id="soundCardTXInvert" value="0">No
+         </td>
+      </tr>
+      <tr title="Leave at 1.0000 and adjust in alsamixer">
+         <th>RX Level</th>
+         <td class="udrcinput"><input type="hidden" name="soundCardRXLevel" id="soundCardRXLevel" value="{{conf.soundCardRXLevel}}" />{{conf.soundCardRXLevel}}</td>
+      </tr>
+      <tr title="Leave at 1.0000 and adjust in alsamixer">
+         <th>TX Level</th>
+         <td class="udrcinput"><input type="hidden" name="soundCardTXLevel" id="soundCardTXLevel" value="{{conf.soundCardTXLevel}}" />{{conf.soundCardTXLevel}}</td>
+      </tr>
+      <tr>
+         <th>TX Delay (ms)</th>
+         <td class="udrcinput"><input type="text" name="soundCardTXDelay" id="soundCardTXDelay" value="{{conf.soundCardTXDelay}}" /></td>
+      </tr>
+      <tr>
+         <th>TX Tail (ms)</th>
+         <td class="udrcinput"><input type="text" name="soundCardTXTail" id="soundCardTXTail" value="{{conf.soundCardTXTail}}" /></td>
+      </tr>
+   </table>
+   </fieldset>
+   <input type="submit"/>
+   <input type="reset" value="Reload" onclick="updateoptions(this)"/>
+   <input type="reset" value="Clear" onclick="updateoptions(this)"/>
+</form>
+<script>
+var radiobuttons = ["rpt1Validation","dtmfBlanking","restriction","errorReply","beaconVoice","announcementEnabled","pttInvert","soundCardRXInvert","soundCardTXInvert"];
+var selects = ["radioType","mode","ack","language","serialConfig"];
+
+function setSimplex() {
+	var x = $('#mode').val()
+	if (x === "1") { 
+		$('#serialConfig').val("5");
+		$('#serialConfig').css('background-color','yellow');
+	}
+}
+
+function levelButton() {
+        var radioType = $('#radioType').val();
+        switch(radioType) {
+                case 'bcr220' :
+                        $("#bcr-levels").show();
+                        $("#yaesu-levels").hide();
+                        $("#other-levels").hide();
+                        break;
+                case 'dr1x-vhf' :
+                        $("#bcr-levels").hide();
+                        $("#yaesu-levels").show();
+                        $("#other-levels").hide();
+                        break;
+                case 'dr1x-uhf' :
+                        $("#bcr-levels").hide();
+                        $("#yaesu-levels").show();
+                        $("#other-levels").hide();
+                        break;
+                default:
+                        $("#bcr-levels").hide();
+                        $("#yaesu-levels").hide();
+                        $("#other-levels").show();
+                        break;
+        }
+}
+
+function updateoptions(mod) {
+        var url = "/udrcconfig?modFile=" + mod.value;
+        $.get(url,function(data) {
+                updateInputs(data,radiobuttons,selects);
+        });
+}
+
+function setgateway(ele) {
+        document.getElementById('gateway').value = ele.value.substring(0,7) + "G";
+}
+
+$(function() {
+        updateInputs(JSON.parse('{{{json conf}}}'),radiobuttons,selects);
+	levelButton();
+	setSimplex();
+});
+
+</script>

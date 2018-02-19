@@ -1,0 +1,80 @@
+<h1>{{title}}</h1>
+<p>Welcome to {{title}} {{user}}</p>
+
+<div class="servicecell-nb">
+	<h2>Web Application</h2>
+	<p>This web application is to help you setup your UDRC with a Gateway.  You will need to <a href='/login'>login</a> 
+		in order to edit operating parameters.  Required parameters will be highlighted <input required value='like this'
+	/>.
+	</p>
+</div>
+<div class="servicecell-nb">
+	<h2>Repeater</h2>
+	<p>Once logged in you can edit parameters for the <a href="/udrc">Repeater / Hotspot</a>. At a minimum you should set modem levels, select
+		a radio type and repeater callsign.  A repeater callsign is followed by a 'module ID' which must be in the 8th
+		position, so if your call is 'W1AW', you will need to put spaces (3) and then the module letter, resulting in
+		a field with '<span class="monospace">W1AW&nbsp;&nbsp;&nbsp;A</span>'.  The convention for module ID letter is:
+		<table>
+			<thead>
+				<tr>
+					<th>Letter</th>
+					<th>Band</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th>A</th>
+					<td>23cm (1240) or 1.25m (220)</td>
+				</tr>
+
+				<tr>
+					<th>B</th>
+					<td>70cm (440)</td>
+				</tr>
+
+				<tr>
+					<th>C</th>
+					<td>2m (146)</td>
+				</tr>
+				
+				<tr>
+					<th>D</th>
+					<td>Other - not common</td>
+				</tr>
+			</tbody>
+		</table>
+	<p>These are only suggestions, you may use any band with each letter. <b>Note:</b> A bug in the Icom ID-31A requires
+	that the module ID for 70cm be the letter 'B'.</p>
+	<p>Press <button>Submit</button> to save your changes.
+</div>
+<div class="servicecell-nb">
+	<h2>Gateway</h2>
+	<p>After you have configured your Repeater/Hotspot, you will want to attach it to a <a href='/ircddbgateway'>Gateway</a>.
+	</p>
+	<p>The Gateway can run on the same Raspberry Pi as your UDRC, the Gateway setup page permits that. At a minimum you will
+	want to input the Gateway Callsign (which should match the callsign of your repeater, without the module ID), and a 
+	location.  A <button>Guess Location</button> is provided to give you an initial Lat/Long based on your public IP 
+	address, however, you should provide an accurate set of coordinates and description.</p>
+	<p>A URL for your dashboard will be automatically generated from your gateway callsign, but that URL will only become
+	active once you have successfully reported into ircDDB.net or QuadNet.</p>
+	<p><b>QuadNet</b> requires no registration, so is available to both repeaters and hotspots, and will accept personal 
+	callsigns (i.e. no club or special callsign required).  <b>Note:</b> If your callsign starts with a digit, the Username
+	will start with a 'r', otherwise your callsign in lowercase letters is sufficient. This gets prefilled by the page when
+	you put in the gateway callsign.</p>
+	<p>Press <button>Submit</button> to save your changes.
+</div>
+<div class="servicecell-nb">
+	<h2>Commands</h2>
+	<p>This page allows you to start/restart and stop services, such as the Repeater, Gateway, Dashboard, and this
+	Application.  It also allows you to enable and disable these services for automatic restart on system boot.</p>
+	<p>It also allows you to perform system reboot and other operations.</p>
+	<p><b>These commands and this application run with superuser privileges, so turn off this application when not in
+	use, and always block it on your firewall.</b></p>
+	
+</div>
+<div class="servicecell-nb">
+	<h2>User Account</h2>
+	<p>Change this configuration tool's password and/or username.</p> 
+	<p>It is also possible to have multiple accounts by editing the JSON in /var/www-node/dstarconfig/accounts.json. However, this page does not properly handle updating multiple accounts at this time.</p>	
+<p>This action does not change the pi account login which should also be changed by using the Linux passwd command.</p>
+</div>

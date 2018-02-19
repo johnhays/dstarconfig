@@ -1,0 +1,51 @@
+<h1>{{title}}</h1>
+<h4>Raspberry Pi {{piModel.model}}, Memory {{piModel.memory}} {{piModel.notes}}<br/>
+{{#if hat.name}}
+{{hat.product}} by {{hat.vendor}}
+{{else}}
+Controller Not Detected
+{{/if}}
+</h4>
+<p>These commands will change running processes on the computer.  Use with caution. <b>It is recommended that you disable this tool when not in use.</b></p>
+<p>If you stop the "Configuration Tool" (this web application), you will need to restart it from the command line using <b>sudo systemctl start dstarconfig</b></p>
+{{#items.subprocesses}}
+	<div class="servicecell">
+		<div class="highlightcell">{{title}}</div>
+			<a href="/commands/{{process}}?command=restart">
+				<button style='width : 100%'>Restart the Proccess</button>
+			</a>
+			<a href="/commands/{{process}}?command=stop">
+				<button style='width : 100%'>Stop the Proccess</button>
+			</a>
+			<a href="/commands/{{process}}?command=enable">
+				<button style='width : 100%'>Enable on Boot</button>
+			</a>
+			<a href="/commands/{{process}}?command=disable">
+				<button style='width : 100%'>Disable on Boot</button>
+			</a>
+	</div>
+{{/items.subprocesses}}
+
+	<div class="servicecell">
+		<div class="highlightcell">Miscellaneous</div>
+		<a href="/commands/reboot"><button>Reboot the System</button></a>
+		<a href="/commands/upnp/eth0?command=start">
+			<button>Enable UPNP on eth0</button>
+		</a>
+		<a href="/commands/upnp/eth0?command=stop">
+			<button>Disable UPNP on eth0</button>
+		</a>
+		<a href="/commands/upnp/wlan0?command=start">
+			<button>Enable UPNP on wlan0</button>
+		</a>
+		<a href="/commands/upnp/wlan0?command=stop">
+			<button>Disable UPNP on wlan0</button>
+		</a>
+		<a href="/commands/updatedstarconfig">
+			<button>Update Config Tool Code</button>
+		</a>
+		<a href="/commands/updatedashboard">
+			<button>Update the Dashboard Code</button>
+		</a>
+		
+	</div>

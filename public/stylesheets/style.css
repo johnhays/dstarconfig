@@ -1,0 +1,93 @@
+body {
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+:required {
+  box-shadow: 4px 4px 20px rgba(200, 0, 0, 0.85);
+}
+
+.modem {
+  box-shadow: 4px 4px 20px rgba(200, 0, 0, 0.85);
+}
+
+.monospace {
+	font-family: monospace;
+}
+
+a {
+  color: #00B7FF;
+}
+
+th {
+  text-align:left;
+}
+
+.logo {
+	float: right;
+	padding: 1em;
+	z-index: -5;
+	border: red 3px solid;
+}
+
+div.servicecell {
+  float: left;
+  padding: 0.5em;
+  margin-right: 1em;
+  margin-bottom: 0.5em;
+  border: 1px black solid;
+}
+
+div.servicecell-nb {
+  float: left;
+  padding: 0.5em;
+  margin-right: 1em;
+  margin-bottom: 0.5em;
+  border: 0px;
+}
+
+div.highlightcell {
+  font-weight: bold;
+  text-align: left;
+}
+
+.ui-autocomplete {
+    max-height: 100px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+ul.menu {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+ul.menu li {
+    float: left;
+}
+
+ul.menu li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+ul.menu li a:hover:not(.active) {
+    background-color: #111;
+}
+
+.active {
+    background-color: red;
+}
+ footer {
+	background-color: #333;
+	color: white;
+	width: 100%;
+	bottom: 0;
+	position: fixed;
+	padding: 1em;
+}

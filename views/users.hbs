@@ -1,0 +1,22 @@
+<h1>{{ title }}</h1>
+<form method="post">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Password</th>
+            </tr>
+        </thead>
+	{{#each accounts}}
+        <tbody id="list">
+            <tr>
+                <td><input type="number" name="id" value="{{id}}"/></td>
+                <td><input type="text" name="username" value="{{username}}"/></td>
+                <td><input type="text" name="password" title="{{password}}" value="{{password}}"/></td>
+            </tr>
+        </tbody>
+	{{/each}}
+    </table>
+    <input type="submit"/>
+</form>
